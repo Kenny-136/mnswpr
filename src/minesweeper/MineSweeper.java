@@ -3,17 +3,18 @@ package minesweeper;
 import java.util.*;
 
 public class MineSweeper {
-    private int[][] field = new int[10][10];
-    private boolean[][] visible = new boolean[10][10];
+    private int magicGridNumber = 30;
+    private int[][] field = new int[magicGridNumber][magicGridNumber];
+    private boolean[][] visible = new boolean[magicGridNumber][magicGridNumber];
     private Random random = new Random();
 
     private static final int MINE = -1;
 
     public void setupField() {
-        int minesToPlace = 99;
+        int minesToPlace = 10;
         while (minesToPlace > 0) {
-            int row = random.nextInt(10);
-            int col = random.nextInt(10);
+            int row = random.nextInt(magicGridNumber);
+            int col = random.nextInt(magicGridNumber);
             if (field[row][col] != MINE) {
                 field[row][col] = MINE;
                 incrementNeighborCounts(row, col);
@@ -25,7 +26,7 @@ public class MineSweeper {
     private void incrementNeighborCounts(int row, int col) {
         for (int i = row - 1; i <= row + 1; i++) {
             for (int j = col - 1; j <= col + 1; j++) {
-                if (i >= 0 && i < 10 && j >= 0 && j < 10 && field[i][j] != MINE) {
+                if (i >= 0 && i < magicGridNumber && j >= 0 && j < magicGridNumber && field[i][j] != MINE) {
                     field[i][j]++;
                 }
             }
@@ -36,18 +37,26 @@ public class MineSweeper {
         System.out.println("====Minesweeper======================================");
         System.out.println("=====================================================");
         System.out.print("===");
-        for (int col = 0; col < 10; col++) {
-            System.out.print("| " + col + " |");
+        for (int col = 0; col < magicGridNumber; col++) {
+            if (col > 9) {
+                System.out.print("| " + col + "|");
+            } else {
+                System.out.print("| " + col + " |");
+            }
         }
         System.out.println();
-        for (int row = 0; row < 10; row++) {
-            System.out.print(row + " |");
-            for (int col = 0; col < 10; col++) {
+        for (int row = 0; row < magicGridNumber; row++) {
+            if (row > 9) {
+                System.out.print(row + "|");
+            } else {
+                System.out.print(row + " |");
+            }
+            for (int col = 0; col < magicGridNumber; col++) {
                 if (visible[row][col]) {
                     if (field[row][col] == MINE) {
                         System.out.print("[ * ]");
                     } else {
-                        System.out.print("[ " + field[row][col] + " ]");
+                        System.out.print("[ " + (field[row][col] == 0 ? " " : field[row][col]) + " ]");
                     }
                 } else {
                     System.out.print("[ ■ ]");
@@ -58,15 +67,24 @@ public class MineSweeper {
     }
 
     public void revealCell(int row, int col) {
-        if (row < 0 || row >= 10 || col < 0 || col >= 10 || visible[row][col]) {
+        if (row < 0 || row >= magicGridNumber || col < 0 || col >= magicGridNumber || visible[row][col]) {
             return;
         }
+
         visible[row][col] = true;
+
+        if (field[row][col] == 0) {
+            for (int i = row - 1; i <= row + 1; i++) {
+                for (int j = col - 1; j <= col + 1; j++) {
+                    revealCell(i, j);
+                }
+            }
+        }
     }
 
     public boolean checkWin() {
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 10; col++) {
+        for (int row = 0; row < magicGridNumber; row++) {
+            for (int col = 0; col < magicGridNumber; col++) {
                 if (!visible[row][col] && field[row][col] != MINE) {
                     return false;
                 }
@@ -77,7 +95,7 @@ public class MineSweeper {
 
     public void startGame() {
         System.out.println("=====================================================");
-        // setupField(); // Comment out this line to go to debug mode.
+        setupField(); // Comment out this line to go to debug mode.
 
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -87,7 +105,7 @@ public class MineSweeper {
             System.out.print("Enter Column (Y) Number: ");
             int col = sc.nextInt();
 
-            if (row < 0 || row >= 10 || col < 0 || col >= 10) {
+            if (row < 0 || row >= magicGridNumber || col < 0 || col >= magicGridNumber) {
                 System.out.println("Incorrect Input!");
                 continue;
             }
@@ -113,13 +131,13 @@ public class MineSweeper {
     public void debugDisplay() {
         System.out.println("=== Minesweeper (Debug Mode) ===");
         System.out.print("   ");
-        for (int col = 0; col < 10; col++) {
+        for (int col = 0; col < magicGridNumber; col++) {
             System.out.print("  " + col + "  ");
         }
         System.out.println();
-        for (int row = 0; row < 10; row++) {
+        for (int row = 0; row < magicGridNumber; row++) {
             System.out.print(row + " |");
-            for (int col = 0; col < 10; col++) {
+            for (int col = 0; col < magicGridNumber; col++) {
                 if (field[row][col] == MINE) {
                     System.out.print("[ * ]");
                 } else if (visible[row][col]) {
@@ -134,10 +152,10 @@ public class MineSweeper {
 
     public static void main(String[] args) {
         MineSweeper game = new MineSweeper();
-        game.setupField();
+        // game.setupField();
         // Make sure to call setupField() to set up the mines before using
         // debugDisplay().
-        game.debugDisplay();
+        // game.debugDisplay();
         // Display the game board with mines on top of the game.
         game.startGame(); // Start playing the Minesweeper game.
     }

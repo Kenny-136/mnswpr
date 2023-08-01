@@ -23,10 +23,14 @@ To prevent Setting Up the Field Twice , Because Setting up the field twice will 
 
 Change minesToPlace int data in setupField() method.
 
+### To Configure Grid Size,
+
+Change the magicGridNumber to your Grid Size You Want, ( At the moment it only work on a square grid)
+
 ## To Do List
 
-1. Configuration for Grid Size.
-2. Discovering an empty square should reveal all squares around it, and cascade into other nearby empty squares
+1. Configuration for Grid Size.✅︎
+2. Discovering an empty square should reveal all squares around it, and cascade into other nearby empty squares✅︎
 3. Flag Method?
 
 ## MVP
@@ -41,5 +45,5 @@ Change minesToPlace int data in setupField() method.
 
 ## Bonuses (optional)
 
-Allow for the user to configure number of mines ✅︎ and grid size via a configuration.
-(Difficult) Discovering an empty square should reveal all squares around it, and cascade into other nearby empty squares
+Allow for the user to configure number of mines ✅︎ and grid size via a configuration.✅︎
+(Difficult) Discovering an empty square should reveal all squares around it, and cascade into other nearby empty squares✅︎
